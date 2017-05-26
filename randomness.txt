@@ -1,0 +1,11 @@
+
+# basic: randomSeed on floating pin, random(100)  https://www.arduino.cc/en/reference/random
+
+# see also: fixed_analogread.ino
+
+# advanced: http://forum.arduino.cc/index.php/topic,108380.0.html
+
+# hardware generator: http://holdenc.altervista.org/avalanche/
+
+
+
