@@ -67,7 +67,10 @@ TCCR2B = (TCCR2B & 0b11111000) | 0x01
 // 16-bit PWM on ATmega382P
 // from: https://arduino.stackexchange.com/a/12719/16606 modified
 // timer1: pins 9 & 10
-// MAX 244Hz (unless ICR1 is lower, e.g. ICR1 = 0x03ff; for 10-bits, )
+// MAX 244Hz (unless ICR1 is lower, e.g. ICR1 = 0x03ff; for 10-bits)
+// Note: setupPWM16(0) is duty cycle 1/65536. Workarounds:
+// 1. if (val == 0) digitalWrite(pin, LOW); else if (val == 0xffff) digitalWrite(pin, HIGH);
+// 2. non-fast mode. https://www.sparkfun.com/datasheets/Components/SMD/ATMega328.pdf page 136.
 
 /* Configure digital pins 9 and 10 as 16-bit PWM outputs. */
 void setupPWM16(uint16_t topVal) { // topVal 0xffff for 16 bits @244Hz, 0x03ff for 10 bits @7812.5Hz
