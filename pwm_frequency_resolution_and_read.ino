@@ -56,3 +56,44 @@ TCCR2B = (TCCR2B & 0b11111000) | 0x01
 // TCNT0: direct access to counter. Risk missing a match against OCR0x!
 // OCR0A, OCR0B: value to compare counter against - e.g. OCR0A=7 will, in certain mode, count up to 8
 
+/////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+// 16-bit PWM on ATmega382P
+// from: https://arduino.stackexchange.com/a/12719/16606 modified
+// timer1: pins 9 & 10
+// MAX 244Hz (unless ICR1 is lower, e.g. ICR1 = 0x03ff; for 10-bits, )
+
+/* Configure digital pins 9 and 10 as 16-bit PWM outputs. */
+void setupPWM16(uint16_t topVal) { // topVal 0xffff for 16 bits @244Hz, 0x03ff for 10 bits @7812.5Hz
+    DDRB |= _BV(PB1) | _BV(PB2);        /* set pins as outputs */
+    TCCR1A = _BV(COM1A1) | _BV(COM1B1)  /* non-inverting PWM */
+        | _BV(WGM11);                   /* mode 14: fast PWM, TOP=ICR1 */
+    TCCR1B = _BV(WGM13) | _BV(WGM12)
+        | _BV(CS10);                    /* no prescaling */
+    ICR1 = topVal;                      /* TOP counter value */
+}
+
+/* 16-bit version of analogWrite(). Works only on pins 9 and 10. */
+void analogWrite16(uint8_t pin, uint16_t val)
+{
+    switch (pin) {
+        case  9: OCR1A = val; break;
+        case 10: OCR1B = val; break;
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////
+
+
+
+
+// related thing (TODO: where to put it?) - read approximate PWM value:
+https://www.arduino.cc/en/Reference/PulseIn
+
